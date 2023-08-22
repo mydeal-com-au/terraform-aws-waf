@@ -151,7 +151,6 @@ variable "managed_rule_group_statement_rules" {
     managed_rule_group_statement = list(object({
       name                       = string
       vendor_name                = string
-      excluded_rule              = optional(list(string), [])
       block_rule_action_override = optional(list(string), [])
       count_rule_action_override = optional(list(string), [])
     }))
@@ -301,8 +300,8 @@ variable "logging_filter" {
       behavior    = string
       requirement = string
       condition = list(object({
-        action_condition     = string
-        label_name_condition = string
+        action_condition     = optional(string)
+        label_name_condition = optional(string)
       }))
     }))
   }))
