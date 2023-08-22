@@ -287,12 +287,9 @@ variable "xss_match_statement_rules" {
 
 variable "logging_redacted_fields" {
   type = list(object({
-    all_query_arguments   = string
-    body                  = string
     method                = string
     query_string          = string
     single_header         = string
-    single_query_argument = string
     uri_path              = string
   }))
 }
