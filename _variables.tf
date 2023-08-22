@@ -11,6 +11,18 @@ variable "waf_regional_enable" {
   default     = false
 }
 
+variable "metrics_enabled" {
+  type        = bool
+  description = "Enable cloudwatch mettrics"
+  default     = true
+}
+
+variable "sampled_requests_enabled" {
+  type        = bool
+  description = "Store sample web requests that match the rules"
+  default     = true
+}
+
 variable "logs_enable" {
   type        = bool
   description = "Enable logs"
@@ -89,6 +101,10 @@ variable "byte_match_statement_rules" {
       priority = string
       type     = string
     }))
+    visibility_config = optional(object({
+      metrics_enabled = optional(bool, true)
+      sampled_requests_enabled = optional(bool, true)
+    }), {})
   }))
 }
 
@@ -102,6 +118,10 @@ variable "geo_match_statement_rules" {
       fallback_behavior = string
       header_name       = string
     }))
+    visibility_config = optional(object({
+      metrics_enabled = optional(bool, true)
+      sampled_requests_enabled = optional(bool, true)
+    }), {})
   }))
 }
 
@@ -116,6 +136,10 @@ variable "ip_set_reference_statement_rules" {
       header_name       = string
       position          = string
     }))
+    visibility_config = optional(object({
+      metrics_enabled = optional(bool, true)
+      sampled_requests_enabled = optional(bool, true)
+    }), {})
   }))
 }
 
@@ -123,12 +147,18 @@ variable "managed_rule_group_statement_rules" {
   type = list(object({
     name     = string
     priority = string
+    override_action = optional(string, "none")
     managed_rule_group_statement = list(object({
       name                       = string
       vendor_name                = string
-      excluded_rule              = list(string)
-      block_rule_action_override = list(string)
+      excluded_rule              = optional(list(string), [])
+      block_rule_action_override = optional(list(string), [])
+      count_rule_action_override = optional(list(string), [])
     }))
+    visibility_config = optional(object({
+      metrics_enabled = optional(bool, true)
+      sampled_requests_enabled = optional(bool, true)
+    }), {})
   }))
 }
 
@@ -145,6 +175,10 @@ variable "rate_based_statement_rules" {
       fallback_behavior = string
       header_name       = string
     }))
+    visibility_config = optional(object({
+      metrics_enabled = optional(bool, true)
+      sampled_requests_enabled = optional(bool, true)
+    }), {})
   }))
 }
 
@@ -167,6 +201,10 @@ variable "regex_pattern_set_reference_statement_rules" {
       priority = number
       type     = string
     }))
+    visibility_config = optional(object({
+      metrics_enabled = optional(bool, true)
+      sampled_requests_enabled = optional(bool, true)
+    }), {})
   }))
 }
 
@@ -190,6 +228,10 @@ variable "size_constraint_statement_rules" {
       priority = number
       type     = string
     }))
+    visibility_config = optional(object({
+      metrics_enabled = optional(bool, true)
+      sampled_requests_enabled = optional(bool, true)
+    }), {})
   }))
 }
 
@@ -211,6 +253,10 @@ variable "sqli_match_statement_rules" {
       priority = number
       type     = string
     }))
+    visibility_config = optional(object({
+      metrics_enabled = optional(bool, true)
+      sampled_requests_enabled = optional(bool, true)
+    }), {})
   }))
 }
 
@@ -232,6 +278,10 @@ variable "xss_match_statement_rules" {
       priority = number
       type     = string
     }))
+    visibility_config = optional(object({
+      metrics_enabled = optional(bool, true)
+      sampled_requests_enabled = optional(bool, true)
+    }), {})
   }))
 }
 

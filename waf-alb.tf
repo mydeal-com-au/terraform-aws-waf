@@ -18,9 +18,9 @@ resource "aws_wafv2_web_acl" "waf_regional" {
   }
 
   visibility_config {
-    cloudwatch_metrics_enabled = true
-    metric_name                = "waf-cloudfront-${var.regional_rule}-general"
-    sampled_requests_enabled   = false
+    cloudwatch_metrics_enabled = var.metrics_enabled
+    metric_name                = "waf-regional-${var.regional_rule}"
+    sampled_requests_enabled   = var.sampled_requests_enabled
   }
 
   dynamic "rule" {
@@ -120,9 +120,9 @@ resource "aws_wafv2_web_acl" "waf_regional" {
       }
 
       visibility_config {
-        cloudwatch_metrics_enabled = true
+        cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
         metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
-        sampled_requests_enabled   = true
+        sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
       rule_label {
@@ -164,9 +164,9 @@ resource "aws_wafv2_web_acl" "waf_regional" {
       }
 
       visibility_config {
-        cloudwatch_metrics_enabled = true
+        cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
         metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
-        sampled_requests_enabled   = true
+        sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
       rule_label {
@@ -218,9 +218,9 @@ resource "aws_wafv2_web_acl" "waf_regional" {
       }
 
       visibility_config {
-        cloudwatch_metrics_enabled = true
+        cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
         metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
-        sampled_requests_enabled   = false
+        sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
       rule_label {
@@ -257,12 +257,25 @@ resource "aws_wafv2_web_acl" "waf_regional" {
             vendor_name = managed_rule_group_statement.value.vendor_name
 
             dynamic "rule_action_override" {
-              for_each = { for block_rule_action_override in try(managed_rule_group_statement.value.block_rule_action_override, []) : block_rule_action_override => block_rule_action_override }
-
+              for_each = toset(try(managed_rule_group_statement.value.block_rule_action_override, []))
+              iterator = rule_action_override_block
+ 
               content {
-                name = rule_action_override.value
+                name = rule_action_override_block.value
                 action_to_use {
                   block {}
+                }
+              }
+            }
+
+            dynamic "rule_action_override" {
+              for_each = toset(try(managed_rule_group_statement.value.count_rule_action_override, []))
+              iterator = rule_action_override_count
+
+              content {
+                name = rule_action_override_count.value
+                action_to_use {
+                  count {}
                 }
               }
             }
@@ -279,9 +292,9 @@ resource "aws_wafv2_web_acl" "waf_regional" {
       }
 
       visibility_config {
-        cloudwatch_metrics_enabled = true
+        cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
         metric_name                = "waf-${var.regional_rule}-managed-${rule.value.name}"
-        sampled_requests_enabled   = false
+        sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
     }
@@ -334,9 +347,9 @@ resource "aws_wafv2_web_acl" "waf_regional" {
       }
 
       visibility_config {
-        cloudwatch_metrics_enabled = true
+        cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
         metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
-        sampled_requests_enabled   = false
+        sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
       rule_label {
@@ -437,9 +450,9 @@ resource "aws_wafv2_web_acl" "waf_regional" {
       }
 
       visibility_config {
-        cloudwatch_metrics_enabled = true
+        cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
         metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
-        sampled_requests_enabled   = false
+        sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
       rule_label {
@@ -543,9 +556,9 @@ resource "aws_wafv2_web_acl" "waf_regional" {
 
 
       visibility_config {
-        cloudwatch_metrics_enabled = true
+        cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
         metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
-        sampled_requests_enabled   = false
+        sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
       rule_label {
@@ -645,9 +658,9 @@ resource "aws_wafv2_web_acl" "waf_regional" {
       }
 
       visibility_config {
-        cloudwatch_metrics_enabled = true
+        cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
         metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
-        sampled_requests_enabled   = false
+        sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
       rule_label {
@@ -747,9 +760,9 @@ resource "aws_wafv2_web_acl" "waf_regional" {
       }
 
       visibility_config {
-        cloudwatch_metrics_enabled = true
+        cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
         metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
-        sampled_requests_enabled   = false
+        sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
       rule_label {
@@ -759,7 +772,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
   }
 
   tags = {
-    Name = "waf-cloudfront-${var.regional_rule}-static-application"
+    Name = "waf-regional-${var.regional_rule}"
   }
 }
 

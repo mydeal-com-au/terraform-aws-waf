@@ -19,6 +19,10 @@ output "web_acl_arn" {
   value       = join("", aws_wafv2_web_acl.waf_cloudfront.*.arn)
 }
 
+output "web_acl_regional_arn" {
+  description = "The ARN of the WAFv2 WebACL."
+  value       = join("", aws_wafv2_web_acl.waf_regional.*.arn)
+}
 
 output "web_acl_capacity_cloudfront" {
   description = "The web ACL capacity units (WCUs) currently being used by this web ACL."
