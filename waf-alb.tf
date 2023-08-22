@@ -804,20 +804,6 @@ resource "aws_wafv2_web_acl_logging_configuration" "waf_logging_configuration" {
     for_each = try(var.logging_redacted_fields, [])
 
     content {
-      dynamic "single_header" {
-        for_each = redacted_fields.value.all_query_arguments != null ? [1] : []
-
-        content {
-          name = redacted_fields.value.single_header
-        }
-      }
-
-      dynamic "body" {
-        for_each = redacted_fields.value.body != null ? [1] : []
-
-        content {}
-      }
-
       dynamic "method" {
         for_each = redacted_fields.value.method != null ? [1] : []
 
@@ -834,13 +820,6 @@ resource "aws_wafv2_web_acl_logging_configuration" "waf_logging_configuration" {
 
         content {
           name = redacted_fields.value.single_header
-        }
-      }
-      dynamic "single_query_argument" {
-        for_each = redacted_fields.value.single_query_argument != null ? [1] : []
-
-        content {
-          name = redacted_fields.value.single_query_argument
         }
       }
 
