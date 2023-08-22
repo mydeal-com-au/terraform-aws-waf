@@ -306,3 +306,9 @@ variable "logging_filter" {
     }))
   }))
 }
+
+variable "environment_name" {
+  description = "Name of the environment"
+  default     = ""
+  type        = string
+}

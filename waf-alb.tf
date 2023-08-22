@@ -1,7 +1,7 @@
 resource "aws_wafv2_web_acl" "waf_regional" {
   count = var.waf_regional_enable ? 1 : 0
 
-  name        = "waf-${var.regional_rule}"
+  name        = "${var.environment_name}-api-gw-${var.regional_rule}"
   description = "Regional WAF managed rules"
   scope       = var.scope
 
@@ -19,7 +19,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
 
   visibility_config {
     cloudwatch_metrics_enabled = var.metrics_enabled
-    metric_name                = "waf-regional-${var.regional_rule}"
+    metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}"
     sampled_requests_enabled   = var.sampled_requests_enabled
   }
 
@@ -121,7 +121,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
 
       visibility_config {
         cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
-        metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
+        metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
@@ -165,7 +165,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
 
       visibility_config {
         cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
-        metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
+        metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
@@ -219,7 +219,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
 
       visibility_config {
         cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
-        metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
+        metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
@@ -285,7 +285,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
 
       visibility_config {
         cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
-        metric_name                = "waf-${var.regional_rule}-managed-${rule.value.name}"
+        metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
@@ -340,7 +340,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
 
       visibility_config {
         cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
-        metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
+        metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
@@ -443,7 +443,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
 
       visibility_config {
         cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
-        metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
+        metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
@@ -549,7 +549,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
 
       visibility_config {
         cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
-        metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
+        metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
@@ -651,7 +651,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
 
       visibility_config {
         cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
-        metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
+        metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
@@ -753,7 +753,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
 
       visibility_config {
         cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
-        metric_name                = "waf-${var.regional_rule}-${rule.value.name}"
+        metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
 
@@ -764,7 +764,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
   }
 
   tags = {
-    Name = "waf-regional-${var.regional_rule}"
+    Name = "waf-api-gw-${var.regional_rule}"
   }
 }
 
@@ -781,7 +781,7 @@ resource "aws_wafv2_web_acl_association" "waf_association" {
 resource "aws_cloudwatch_log_group" "waf_log_group" {
   count = var.logs_enable ? 1 : 0
 
-  name              = "aws-waf-logs-waf/${var.regional_rule}"
+  name              = "${var.environment_name}-waf-api-gw/${var.regional_rule}"
   retention_in_days = var.logs_retension
 }
 
