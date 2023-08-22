@@ -28,7 +28,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
     for_each = { for rule in try(var.byte_match_statement_rules, []) : rule.name => rule }
 
     content {
-      name     = "waf-${var.regional_rule}-${rule.value.name}"
+      name     = rule.value.name
       priority = rule.value.priority
 
       action {
@@ -124,10 +124,6 @@ resource "aws_wafv2_web_acl" "waf_regional" {
         metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
-
-      rule_label {
-        name = "waf-rule-label-${var.regional_rule}-${rule.value.name}"
-      }
     }
   }
 
@@ -136,7 +132,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
     for_each = { for rule in try(var.geo_match_statement_rules, []) : rule.name => rule }
 
     content {
-      name     = "waf-${var.regional_rule}-${rule.value.name}"
+      name     = rule.value.name
       priority = rule.value.priority
 
       action {
@@ -168,10 +164,6 @@ resource "aws_wafv2_web_acl" "waf_regional" {
         metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
-
-      rule_label {
-        name = "waf-rule-label-${var.regional_rule}-${rule.value.name}"
-      }
     }
   }
 
@@ -180,7 +172,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
     for_each = { for rule in try(var.ip_set_reference_statement_rules, []) : rule.name => rule }
 
     content {
-      name     = "waf-${var.regional_rule}-${rule.value.name}"
+      name     = rule.value.name
       priority = rule.value.priority
 
       action {
@@ -222,10 +214,6 @@ resource "aws_wafv2_web_acl" "waf_regional" {
         metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
-
-      rule_label {
-        name = "waf-rule-label-${var.regional_rule}-${rule.value.name}"
-      }
     }
   }
 
@@ -234,7 +222,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
     for_each = { for rule in try(var.managed_rule_group_statement_rules, []) : rule.name => rule }
 
     content {
-      name     = "waf-${var.regional_rule}-managed-${rule.value.name}"
+      name     = rule.value.name
       priority = rule.value.priority
 
       override_action {
@@ -297,7 +285,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
     for_each = { for rule in try(var.rate_based_statement_rules, []) : rule.name => rule }
 
     content {
-      name     = "waf-${var.regional_rule}-${rule.value.name}"
+      name     = rule.value.name
       priority = rule.value.priority
 
       action {
@@ -343,10 +331,6 @@ resource "aws_wafv2_web_acl" "waf_regional" {
         metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
-
-      rule_label {
-        name = "waf-rule-label-${var.regional_rule}-${rule.value.name}"
-      }
     }
   }
 
@@ -355,7 +339,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
     for_each = { for rule in try(var.regex_pattern_set_reference_statement_rules, []) : rule.name => rule }
 
     content {
-      name     = "waf-${var.regional_rule}-${rule.value.name}"
+      name     = rule.value.name
       priority = rule.value.priority
 
       action {
@@ -446,10 +430,6 @@ resource "aws_wafv2_web_acl" "waf_regional" {
         metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
-
-      rule_label {
-        name = "waf-rule-label-${var.regional_rule}-${rule.value.name}"
-      }
     }
   }
 
@@ -458,7 +438,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
     for_each = { for rule in try(var.size_constraint_statement_rules, []) : rule.name => rule }
 
     content {
-      name     = "waf-${var.regional_rule}-${rule.value.name}"
+      name     = rule.value.name
       priority = rule.value.priority
 
       action {
@@ -552,10 +532,6 @@ resource "aws_wafv2_web_acl" "waf_regional" {
         metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
-
-      rule_label {
-        name = "waf-rule-label-${var.regional_rule}-${rule.value.name}"
-      }
     }
   }
 
@@ -564,7 +540,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
     for_each = { for rule in try(var.sqli_match_statement_rules, []) : rule.name => rule }
 
     content {
-      name     = "waf-${var.regional_rule}-${rule.value.name}"
+      name     = rule.value.name
       priority = rule.value.priority
 
       action {
@@ -654,10 +630,6 @@ resource "aws_wafv2_web_acl" "waf_regional" {
         metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
       }
-
-      rule_label {
-        name = "waf-rule-label-${var.regional_rule}-${rule.value.name}"
-      }
     }
   }
 
@@ -666,7 +638,7 @@ resource "aws_wafv2_web_acl" "waf_regional" {
     for_each = { for rule in try(var.xss_match_statement_rules, []) : rule.name => rule }
 
     content {
-      name     = "waf-${var.regional_rule}-${rule.value.name}"
+      name     = rule.value.name
       priority = rule.value.priority
 
       action {
@@ -755,10 +727,6 @@ resource "aws_wafv2_web_acl" "waf_regional" {
         cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
         metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
         sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
-      }
-
-      rule_label {
-        name = "waf-rule-label-${var.regional_rule}-${rule.value.name}"
       }
     }
   }
