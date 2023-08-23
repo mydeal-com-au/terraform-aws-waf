@@ -749,7 +749,7 @@ resource "aws_wafv2_web_acl_association" "waf_association" {
 resource "aws_cloudwatch_log_group" "waf_log_group" {
   count = var.logs_enable ? 1 : 0
 
-  name              = "${var.environment_name}-waf-api-gw/${var.regional_rule}"
+  name              = "aws-waf-logs-${var.environment_name}-api-gw/${var.regional_rule}"
   retention_in_days = var.logs_retension
 }
 
