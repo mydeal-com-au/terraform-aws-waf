@@ -758,7 +758,6 @@ resource "aws_wafv2_web_acl_logging_configuration" "waf_logging_configuration" {
 
   log_destination_configs = var.s3_log_destination ? var.s3_log_destination_arn : [aws_cloudwatch_log_group.waf_log_group[count.index].arn]
   resource_arn            = aws_wafv2_web_acl.waf_regional[count.index].arn
-  depends_on              = var.s3_log_destination ? [] : [aws_cloudwatch_log_group.waf_log_group]
 
   dynamic "redacted_fields" {
     for_each = try(var.logging_redacted_fields, [])
