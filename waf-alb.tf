@@ -747,7 +747,7 @@ resource "aws_wafv2_web_acl_association" "waf_association" {
 }
 
 resource "aws_cloudwatch_log_group" "waf_log_group" {
-  count = var.logs_enable ? 1 : 0
+  count = var.logs_enable && !var.s3_log_destination ? 1 : 0
 
   name              = "aws-waf-logs-${var.environment_name}-api-gw/${var.regional_rule}"
   retention_in_days = var.logs_retension
@@ -756,9 +756,9 @@ resource "aws_cloudwatch_log_group" "waf_log_group" {
 resource "aws_wafv2_web_acl_logging_configuration" "waf_logging_configuration" {
   count = var.logs_enable ? 1 : 0
 
-  log_destination_configs = [aws_cloudwatch_log_group.waf_log_group[count.index].arn]
+  log_destination_configs = var.s3_log_destination ? var.s3_log_destination_arn : [aws_cloudwatch_log_group.waf_log_group[count.index].arn]
   resource_arn            = aws_wafv2_web_acl.waf_regional[count.index].arn
-  depends_on              = [aws_cloudwatch_log_group.waf_log_group]
+  depends_on              = var.s3_log_destination ? [] : [aws_cloudwatch_log_group.waf_log_group]
 
   dynamic "redacted_fields" {
     for_each = try(var.logging_redacted_fields, [])

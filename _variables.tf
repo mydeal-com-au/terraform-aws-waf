@@ -312,3 +312,15 @@ variable "environment_name" {
   default     = ""
   type        = string
 }
+
+variable "s3_log_destination" {
+  description = "Use s3 bucket as waf logs destination"
+  default     = false
+  type        = bool
+}
+
+variable "s3_log_destination_arn" {
+  description = "s3 bucket arn for waf logs"
+  default     = []
+  type        = list(string)
+}
