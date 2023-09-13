@@ -194,15 +194,17 @@ resource "aws_wafv2_web_acl" "waf_regional" {
       }
 
       statement {
-        arn =  length(try(rule.value.ip_set, [])) > 0 ? aws_wafv2_ip_set.ip_set[rule.value.name].arn : rule.value.ip_set_arn
-        
-        dynamic "ip_set_forwarded_ip_config" {
-          for_each = rule.value.ip_set_reference_statement != null ? [1] : []
-          content {
+        ip_set_reference_statement {
+          arn =  length(try(rule.value.ip_set, [])) > 0 ? aws_wafv2_ip_set.ip_set[rule.value.name].arn : rule.value.ip_set_arn
+          
+          dynamic "ip_set_forwarded_ip_config" {
+            for_each = rule.value.ip_set_reference_statement != null ? [1] : []
+            content {
               fallback_behavior = rule.value.ip_set_reference_statement.fallback_behavior
               header_name       = rule.value.ip_set_reference_statement.header_name
               position          = rule.value.ip_set_reference_statement.position
             }
+          }
         }
       }
 
