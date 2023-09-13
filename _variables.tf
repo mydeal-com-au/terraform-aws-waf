@@ -130,8 +130,9 @@ variable "ip_set_reference_statement_rules" {
     name     = string
     priority = string
     action   = string
-    ip_set   = list(string)
-    ip_set_reference_statement = list(object({
+    ip_set   = optional(list(string), [])
+    ip_set_arn = optional(string)
+    ip_set_reference_statement = optional(object({
       fallback_behavior = string
       header_name       = string
       position          = string
