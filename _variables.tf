@@ -114,10 +114,6 @@ variable "geo_match_statement_rules" {
     priority      = string
     action        = string
     country_codes = list(string)
-    geo_match_statement = list(object({
-      fallback_behavior = string
-      header_name       = string
-    }))
     visibility_config = optional(object({
       metrics_enabled = optional(bool, true)
       sampled_requests_enabled = optional(bool, true)
