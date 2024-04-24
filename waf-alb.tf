@@ -730,6 +730,39 @@ resource "aws_wafv2_web_acl" "waf_regional" {
     }
   }
 
+  dynamic "rule" {
+
+    for_each = { for rule in try(var.user_defined_rule_group_statement_rules, []) : rule.name => rule }
+
+    content {
+      name     = rule.value.name
+      priority = rule.value.priority
+
+      override_action {
+        dynamic "count" {
+          for_each = lookup(rule.value, "override_action", null) == "count" ? [1] : []
+          content {}
+        }
+        dynamic "none" {
+          for_each = lookup(rule.value, "override_action", null) != "count" ? [1] : []
+          content {}
+        }
+      }
+
+      statement {
+        rule_group_reference_statement  {
+          arn =  rule.value.rule_group_arn
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = try(rule.value.visibility_config.metrics_enabled, var.metrics_enabled)
+        metric_name                = "${var.environment_name}-api-gw-${var.regional_rule}-${rule.value.name}"
+        sampled_requests_enabled   = try(rule.value.visibility_config.sampled_requests_enabled, var.sampled_requests_enabled)
+      }
+    }
+  }
+
   tags = {
     Name = "waf-api-gw-${var.regional_rule}"
   }
