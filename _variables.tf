@@ -292,7 +292,7 @@ variable "user_defined_rule_group_statement_rules" {
       sampled_requests_enabled = optional(bool, true)
     }), {})
   }))
-  default = null
+  default = []
 }
 
 variable "logging_redacted_fields" {
