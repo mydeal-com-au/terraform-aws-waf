@@ -282,7 +282,7 @@ variable "xss_match_statement_rules" {
 }
 
 variable "user_defined_rule_group_statement_rules" {
-  type = optional(list(object({
+  type = list(object({
     name            = string
     priority        = string
     override_action = optional(string, "none")
@@ -291,7 +291,8 @@ variable "user_defined_rule_group_statement_rules" {
       metrics_enabled          = optional(bool, true)
       sampled_requests_enabled = optional(bool, true)
     }), {})
-  })))
+  }))
+  default = null
 }
 
 variable "logging_redacted_fields" {
