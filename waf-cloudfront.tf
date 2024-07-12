@@ -186,16 +186,15 @@ resource "aws_wafv2_web_acl" "waf_cloudfront" {
       }
 
       statement {
-        dynamic "ip_set_reference_statement" {
-          for_each = { for ip_set_reference_statement_rules in try(rule.value.ip_set_reference_statement, []) : ip_set_reference_statement_rules.fallback_behavior => ip_set_reference_statement_rules }
+        ip_set_reference_statement {
+          arn =  length(try(rule.value.ip_set, [])) > 0 ? aws_wafv2_ip_set.ip_set[rule.value.name].arn : rule.value.ip_set_arn
 
-          content {
-            arn = aws_wafv2_ip_set.ip_set[rule.value.name].arn
-
-            ip_set_forwarded_ip_config {
-              fallback_behavior = ip_set_reference_statement.value.fallback_behavior
-              header_name       = ip_set_reference_statement.value.header_name
-              position          = ip_set_reference_statement.value.position
+          dynamic "ip_set_forwarded_ip_config" {
+            for_each = rule.value.ip_set_reference_statement != null ? [1] : []
+            content {
+              fallback_behavior = rule.value.ip_set_reference_statement.fallback_behavior
+              header_name       = rule.value.ip_set_reference_statement.header_name
+              position          = rule.value.ip_set_reference_statement.position
             }
           }
         }
