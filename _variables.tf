@@ -52,6 +52,11 @@ variable "default_action" {
   default = "block"
 }
 
+variable "default_action_cloudfront" {
+  type    = string
+  default = "allow"
+}
+
 variable "scope" {
   type        = string
   description = "The scope of this Web ACL. Valid options: CLOUDFRONT, REGIONAL(ALB)."
