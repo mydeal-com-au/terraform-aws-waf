@@ -246,15 +246,30 @@ resource "aws_wafv2_web_acl" "waf_regional" {
             dynamic "scope_down_statement" {
               for_each = length(try(managed_rule_group_statement.value.whitelist_ip_sets_arn, [])) > 0 ? [1] : []
               content {
-                and_statement {
-                  dynamic "statement" {
-                    for_each = toset(try(managed_rule_group_statement.value.whitelist_ip_sets_arn, [])) 
-                    iterator = ip_set_arn
-                    content {
-                      not_statement {
-                        statement {
-                          ip_set_reference_statement {
-                            arn = ip_set_arn.value
+                dynamic "not_statement" {
+                  for_each = length(try(managed_rule_group_statement.value.whitelist_ip_sets_arn, [])) == 1 ? toset(try(managed_rule_group_statement.value.whitelist_ip_sets_arn, [])) : []
+                  iterator = ip_set_arn
+                  content {
+                    statement {
+                      ip_set_reference_statement {
+                        arn = ip_set_arn.value
+                      }
+                    }
+                  }
+                }
+
+                dynamic "and_statement" {
+                  for_each = length(try(managed_rule_group_statement.value.whitelist_ip_sets_arn, [])) > 1 ? [1] : []
+                  content {
+                    dynamic "statement" {
+                      for_each = toset(try(managed_rule_group_statement.value.whitelist_ip_sets_arn, []))
+                      iterator = ip_set_arn
+                      content {
+                        not_statement {
+                          statement {
+                            ip_set_reference_statement {
+                              arn = ip_set_arn.value
+                            }
                           }
                         }
                       }
