@@ -243,6 +243,26 @@ resource "aws_wafv2_web_acl" "waf_regional" {
             name        = managed_rule_group_statement.value.name
             vendor_name = managed_rule_group_statement.value.vendor_name
 
+            dynamic "scope_down_statement" {
+              for_each = length(try(managed_rule_group_statement.value.whitelist_ip_sets_arn, [])) > 0 ? [1] : []
+              content {
+                and_statement {
+                  dynamic "statement" {
+                    for_each = toset(try(managed_rule_group_statement.value.whitelist_ip_sets_arn, [])) 
+                    content {
+                      not_statement {
+                        statement {
+                          ip_set_reference_statement {
+                            arn = statement.value
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
             dynamic "rule_action_override" {
               for_each = toset(try(managed_rule_group_statement.value.block_rule_action_override, []))
               iterator = rule_action_override_block

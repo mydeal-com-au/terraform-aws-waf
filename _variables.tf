@@ -155,6 +155,7 @@ variable "managed_rule_group_statement_rules" {
       vendor_name                = string
       block_rule_action_override = optional(list(string), [])
       count_rule_action_override = optional(list(string), [])
+      whitelist_ip_sets_arns     = optional(list(string), [])
     }))
     visibility_config = optional(object({
       metrics_enabled = optional(bool, true)
